@@ -22,18 +22,18 @@ class FileIterator implements Iterator
   protected $_currentElement = null;
 
   /**
-   * Valid element or not
-   *
-   * @var bool
-   */
-  protected $_valid;
-
-  /**
    * Essentially, the number of lines
    *
    * @var int
    */
   protected $_eof;
+
+  /**
+   * Current line number
+   *
+   * @var int
+   */
+  protected $_currentIndex = 0;
 
   /**
    * Create file pointer
@@ -49,7 +49,7 @@ class FileIterator implements Iterator
     $this->_eof = ftell($this->_handle);
 
     // Rewind
-    rewind($this->_handle);
+    $this->rewind();
   }
 
   /**
@@ -60,18 +60,18 @@ class FileIterator implements Iterator
    */
   public function current()
   {
-    return $this->_currentElement;
+    return trim($this->_currentElement, "\r\n");
   }
 
   /**
-   * Return the key of the current element (Getter for currentIndex)
+   * Return the key of the current element (Getter for currentLineNumber)
    * Implements Iterator::key()
    *
    * @return int
    */
   public function key()
   {
-    return ftell($this->_handle);
+    return $this->_currentIndex;
   }
 
   /**
@@ -84,6 +84,7 @@ class FileIterator implements Iterator
   public function next()
   {
     $this->_currentElement = fgets($this->_handle, self::LINE_LENGTH);
+    $this->_currentIndex++;
   }
 
   /**
@@ -95,6 +96,8 @@ class FileIterator implements Iterator
   public function rewind()
   {
     rewind($this->_handle);
+    $this->_currentIndex = -1;
+    $this->next();
   }
 
   /**
@@ -104,11 +107,7 @@ class FileIterator implements Iterator
    */
   public function valid()
   {
-    if (ftell($this->_handle) >= $this->_eof)
-    {
-      return false;
-    }
-    return true;
+    return (bool) $this->current();
   }
 
   /**
