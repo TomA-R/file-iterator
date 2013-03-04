@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @link https://github.com/TomA-R/file-iterator
+ */
 class FileIterator implements Iterator
 {
   /**
@@ -22,13 +25,6 @@ class FileIterator implements Iterator
   protected $_currentElement = null;
 
   /**
-   * Essentially, the number of lines
-   *
-   * @var int
-   */
-  protected $_eof;
-
-  /**
    * Current line number
    *
    * @var int
@@ -43,10 +39,6 @@ class FileIterator implements Iterator
   public function __construct($fileName)
   {
     $this->_handle = fopen($fileName, 'r');
-
-    // Determine EOF
-    fseek($this->_handle, 0, SEEK_END);
-    $this->_eof = ftell($this->_handle);
 
     // Rewind
     $this->rewind();
