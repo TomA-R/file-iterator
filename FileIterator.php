@@ -114,7 +114,7 @@ class FileIterator implements Iterator
    * Checks whether current file line matches given regexp pattern
    * If $matches is provided, it will be filled with the results of search.
    *
-   * @param string $pattern
+   * @param string     $pattern
    * @param array|null $matches
    * @return int|false
    */
